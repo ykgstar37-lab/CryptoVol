@@ -1,6 +1,6 @@
 # CryptoVol Dashboard
 
-[![CI](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml)
+[![CI](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml)
 
 **[▶ 라이브 데모](https://crypto-volatility-intelligence-syst.vercel.app/)** · [API 헬스체크](https://cryptovol-api.onrender.com/api/health) · [논문 + 재현 부록](docs/paper/)
 
