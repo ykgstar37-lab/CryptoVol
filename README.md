@@ -1,14 +1,14 @@
-# CryptoVol Dashboard
-
-[![CI](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml)
-![기간](https://img.shields.io/badge/개발_기간-2026.03_~_2026.09-6B7280)
-
+<p align="center"><sub>백엔드가 Render 무료 플랜이라 첫 접속 시 서버가 깨어나는 데 약 50초가 걸립니다 · <a href="https://cryptovol-api.onrender.com/api/health">API 헬스체크</a></sub></p>
 <p align="center">
   <a href="https://crypto-volatility-intelligence-syst.vercel.app/"><img src="docs/buttons/demo.svg" alt="라이브 데모 열기" width="232"></a>
   &nbsp;
   <a href="docs/paper/"><img src="docs/buttons/paper.svg" alt="논문 + 재현 부록" width="232"></a>
 </p>
-<p align="center"><sub>백엔드가 Render 무료 플랜이라 첫 접속 시 서버가 깨어나는 데 약 50초가 걸립니다 · <a href="https://cryptovol-api.onrender.com/api/health">API 헬스체크</a></sub></p>
+
+# CryptoVol Dashboard
+
+[![CI](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml)
+![기간](https://img.shields.io/badge/개발_기간-2026.03_~_2026.09-6B7280)
 
 > **GARCH 변동성 모형을 실시간 웹 서비스로 전환한 멀티코인 변동성 예측 대시보드**
 >
