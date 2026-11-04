@@ -1,10 +1,12 @@
 # CryptoVol Dashboard
 
 [![CI](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml)
+![기간](https://img.shields.io/badge/개발_기간-2026.03_~_2026.09-6B7280)
+
 [![Demo](https://img.shields.io/badge/Demo-라이브_데모-4A90D9)](https://crypto-volatility-intelligence-syst.vercel.app/)
 [![API](https://img.shields.io/badge/API-헬스체크-1A1A2E)](https://cryptovol-api.onrender.com/api/health)
 [![Paper](https://img.shields.io/badge/Paper-논문_%2B_재현_부록-34C759)](docs/paper/)
-![기간](https://img.shields.io/badge/개발_기간-2026.03_~_2026.09-6B7280)
+
 
 > 백엔드가 Render 무료 플랜이라 서버가 깨어나는 데 약 50초가 걸립니다. 
 
