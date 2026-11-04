@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // HTTPS 페이지에서 ws://로 WebSocket을 만들면 브라우저가 SecurityError를 던진다.
 // 그 예외가 렌더 중에 발생하면 대시보드 전체가 언마운트되어 흰 화면이 되므로,
@@ -23,62 +23,67 @@ export default function useRealtimePrice(addLog) {
     const wsRef = useRef(null);
     const reconnectTimer = useRef(null);
 
-    const connect = useCallback(() => {
-        if (wsRef.current?.readyState === WebSocket.OPEN) return;
-
-        const url = `${WS_BASE}/ws/ticks`;
-
-        let ws;
-        try {
-            ws = new WebSocket(url);
-        } catch (e) {
-            // 잘못된 스킴/주소여도 실시간 시세만 포기하고 대시보드는 살린다.
-            setConnected(false);
-            if (addLog) addLog('error', `WebSocket 연결 실패 (${url}): ${e.message}`);
-            return;
-        }
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-            setConnected(true);
-            if (addLog) addLog('success', 'WebSocket connected to Binance relay');
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type === 'tick') {
-                    if (data.symbol === 'BTC') {
-                        setBtc({ price: data.price, ts: data.ts });
-                    } else if (data.symbol === 'ETH') {
-                        setEth({ price: data.price, ts: data.ts });
-                    } else if (data.symbol === 'SOL') {
-                        setSol({ price: data.price, ts: data.ts });
-                    }
-                }
-            } catch {
-                // ignore parse errors
-            }
-        };
-
-        ws.onclose = () => {
-            setConnected(false);
-            if (addLog) addLog('info', 'WebSocket disconnected. Reconnecting in 3s...');
-            reconnectTimer.current = setTimeout(connect, 3000);
-        };
-
-        ws.onerror = () => {
-            ws.close();
-        };
-    }, [addLog]);
-
     useEffect(() => {
+        // cleanup에서 close()를 부르면 onclose가 다시 실행된다.
+        // 그때 재연결을 예약하면 언마운트된 뒤에도 3초마다 연결을 시도하므로 막는다.
+        let disposed = false;
+
+        const connect = () => {
+            if (disposed || wsRef.current?.readyState === WebSocket.OPEN) return;
+
+            const url = `${WS_BASE}/ws/ticks`;
+
+            let ws;
+            try {
+                ws = new WebSocket(url);
+            } catch (e) {
+                // 잘못된 스킴/주소여도 실시간 시세만 포기하고 대시보드는 살린다.
+                if (addLog) addLog('error', `WebSocket 연결 실패 (${url}): ${e.message}`);
+                return;
+            }
+            wsRef.current = ws;
+
+            ws.onopen = () => {
+                setConnected(true);
+                if (addLog) addLog('success', 'WebSocket connected to Binance relay');
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'tick') {
+                        if (data.symbol === 'BTC') {
+                            setBtc({ price: data.price, ts: data.ts });
+                        } else if (data.symbol === 'ETH') {
+                            setEth({ price: data.price, ts: data.ts });
+                        } else if (data.symbol === 'SOL') {
+                            setSol({ price: data.price, ts: data.ts });
+                        }
+                    }
+                } catch {
+                    // ignore parse errors
+                }
+            };
+
+            ws.onclose = () => {
+                setConnected(false);
+                if (disposed) return;
+                if (addLog) addLog('info', 'WebSocket disconnected. Reconnecting in 3s...');
+                reconnectTimer.current = setTimeout(connect, 3000);
+            };
+
+            ws.onerror = () => {
+                ws.close();
+            };
+        };
+
         connect();
         return () => {
+            disposed = true;
             clearTimeout(reconnectTimer.current);
             wsRef.current?.close();
         };
-    }, [connect]);
+    }, [addLog]);
 
     return { btc, eth, sol, connected };
 }

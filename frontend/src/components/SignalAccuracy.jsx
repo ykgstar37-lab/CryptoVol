@@ -1,19 +1,9 @@
-import { useState, useEffect } from 'react';
 import { fetchSignalAccuracy } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 export default function SignalAccuracy({ coin = 'BTC', t = {} }) {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { data, loading } = useAsyncData(coin, () => fetchSignalAccuracy(coin));
     const lang = t.priceTitle === '비트코인 가격' ? 'ko' : 'en';
-
-    useEffect(() => {
-        setData(null);
-        setLoading(true);
-        fetchSignalAccuracy(coin)
-            .then(setData)
-            .catch(() => {})
-            .finally(() => setLoading(false));
-    }, [coin]);
 
     return (
         <div className="card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm h-full flex flex-col">

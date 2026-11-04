@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fetchBriefing } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 const MASCOTS = [
     '/mascot/3._Dude-Photoroom.png',
@@ -10,31 +11,15 @@ const MASCOTS = [
 
 export default function AiMascot({ t = {} }) {
     const [open, setOpen] = useState(false);
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [requested, setRequested] = useState(false);
     const [mascotIdx] = useState(() => Math.floor(Math.random() * MASCOTS.length));
     const lang = t.priceTitle === '비트코인 가격' ? 'ko' : 'en';
+    const { data, loading } = useAsyncData(requested ? lang : null, () => fetchBriefing(lang));
 
     const handleClick = () => {
-        if (!open && !data) {
-            setLoading(true);
-            fetchBriefing(lang)
-                .then(setData)
-                .catch(() => setData(null))
-                .finally(() => setLoading(false));
-        }
+        setRequested(true);
         setOpen(!open);
     };
-
-    useEffect(() => {
-        if (open && data) {
-            setLoading(true);
-            fetchBriefing(lang)
-                .then(setData)
-                .catch(() => {})
-                .finally(() => setLoading(false));
-        }
-    }, [lang]);
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">

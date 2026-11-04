@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { fetchVolatilityAccuracy } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 const MODEL_COLORS = {
     'GARCH(1,1)': '#2b4fcb',
@@ -11,18 +12,9 @@ const MODEL_COLORS = {
 const MEDAL = ['🥇', '🥈', '🥉'];
 
 export default function AccuracyTracker({ coin = 'BTC', t = {} }) {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { data, loading } = useAsyncData(coin, () => fetchVolatilityAccuracy(60, coin));
     const [viewMode, setViewMode] = useState('cumulative'); // 'cumulative' | 'daily'
     const lang = t.priceTitle === '비트코인 가격' ? 'ko' : 'en';
-
-    useEffect(() => {
-        setLoading(true);
-        fetchVolatilityAccuracy(60, coin)
-            .then(setData)
-            .catch(() => setData(null))
-            .finally(() => setLoading(false));
-    }, [coin]);
 
     if (loading) {
         return (

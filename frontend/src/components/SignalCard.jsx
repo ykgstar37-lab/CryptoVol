@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { fetchSignal } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 const SIGNAL_STYLES = {
     buy: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-[#2b4fcb]', badge: 'bg-[#2b4fcb]', label: 'BUY', emoji: '📈' },
@@ -15,12 +15,7 @@ const REASON_COLORS = {
 };
 
 export default function SignalCard({ coin = 'BTC', t = {} }) {
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        setData(null);
-        fetchSignal(coin).then(setData).catch(() => {});
-    }, [coin]);
+    const { data } = useAsyncData(coin, () => fetchSignal(coin));
 
     if (!data) return null;
 

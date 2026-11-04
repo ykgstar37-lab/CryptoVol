@@ -1,15 +1,10 @@
-import { useState, useEffect } from 'react';
 import { fetchLeaderboard } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 const MEDAL = ['🥇', '🥈', '🥉'];
 
 export default function Leaderboard({ coin = 'BTC', t = {} }) {
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        setData([]);
-        fetchLeaderboard(coin).then(setData).catch(() => {});
-    }, [coin]);
+    const data = useAsyncData(coin, () => fetchLeaderboard(coin)).data ?? [];
 
     if (!data.length) return null;
 

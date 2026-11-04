@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchVolatilityCompare } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 const MODELS = [
     { key: 'realized', name: 'Realized', color: '#94a3b8', dash: '5 3' },
@@ -11,18 +12,11 @@ const MODELS = [
 ];
 
 export default function VolatilityChart({ coin = 'BTC', t = {} }) {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [activeModels, setActiveModels] = useState(new Set(MODELS.map(m => m.key)));
     const [period, setPeriod] = useState(90);
-
-    useEffect(() => {
-        setLoading(true);
-        fetchVolatilityCompare(period, coin)
-            .then(setData)
-            .catch(() => {})
-            .finally(() => setLoading(false));
-    }, [period, coin]);
+    const volatility = useAsyncData(`${coin}:${period}`, () => fetchVolatilityCompare(period, coin));
+    const data = volatility.data ?? [];
+    const loading = volatility.loading;
 
     const toggle = (key) => {
         setActiveModels(prev => {

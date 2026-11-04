@@ -84,7 +84,7 @@ function PopupSignalAccuracy({ dark, lang, onClose }) {
 }
 
 /* ─── Popup: ETH Price ─── */
-function PopupEthPrice({ dark, lang, ethPrice, onClose }) {
+function PopupEthPrice({ dark, ethPrice, onClose }) {
     const ethChange = ethPrice?.usd_24h_change;
     const isPositive = ethChange && ethChange > 0;
     return (
@@ -315,7 +315,7 @@ export default function BottomDock({ dark, ethPrice, price, volatility, t = {}, 
         const close = () => setActivePopup(null);
         switch (activePopup) {
             case 'accuracy': return <PopupSignalAccuracy dark={dark} lang={lang} onClose={close} />;
-            case 'eth': return <PopupEthPrice dark={dark} lang={lang} ethPrice={ethPrice} onClose={close} />;
+            case 'eth': return <PopupEthPrice dark={dark} ethPrice={ethPrice} onClose={close} />;
             case 'alert': return <PopupPriceAlert dark={dark} lang={lang} currentPrice={price?.price} onClose={close} addToast={addToast} />;
             case 'report': return <PopupReportDownload dark={dark} lang={lang} price={price} volatility={volatility} onClose={close} />;
             default: return null;

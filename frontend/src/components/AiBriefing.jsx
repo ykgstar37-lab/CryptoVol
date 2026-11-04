@@ -1,18 +1,9 @@
-import { useState, useEffect } from 'react';
 import { fetchBriefing } from '../api/client';
+import useAsyncData from '../hooks/useAsyncData';
 
 export default function AiBriefing({ t = {} }) {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
     const lang = t.priceTitle === '비트코인 가격' ? 'ko' : 'en';
-
-    useEffect(() => {
-        setLoading(true);
-        fetchBriefing(lang)
-            .then(setData)
-            .catch(() => setData(null))
-            .finally(() => setLoading(false));
-    }, [lang]);
+    const { data, loading } = useAsyncData(lang, () => fetchBriefing(lang));
 
     return (
         <div className="bg-gradient-to-br from-[#2b4fcb] to-[#1b3fab] rounded-2xl p-6 shadow-lg text-white">
