@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="232" height="56" viewBox="0 0 232 56" role="img" aria-label="라이브 데모 열기">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a5fe0"/>
+      <stop offset="1" stop-color="#2b4fcb"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="3" width="230" height="52" rx="12" fill="#1b3fab" opacity="0.35"/>
+  <rect x="1" y="1" width="230" height="52" rx="12" fill="url(#bg)"/>
+  <circle cx="34" cy="27" r="13" fill="#ffffff" opacity="0.18"/>
+  <path d="M30 20.5 L40 27 L30 33.5 Z" fill="#ffffff"/>
+  <text x="58" y="33" fill="#ffffff" font-family="Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" font-size="17" font-weight="700">라이브 데모 열기</text>
+  <path d="M203 22 L209 27 L203 32" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+</svg>

@@ -1,20 +1,20 @@
 # CryptoVol Dashboard
 
-[![CI](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/crypto-volatility-intelligence-system/actions/workflows/ci.yml)
+[![CI](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml/badge.svg)](https://github.com/ykgstar37-lab/CryptoVol/actions/workflows/ci.yml)
 ![기간](https://img.shields.io/badge/개발_기간-2026.03_~_2026.09-6B7280)
 
-[![Demo](https://img.shields.io/badge/Demo-라이브_데모-4A90D9)](https://crypto-volatility-intelligence-syst.vercel.app/)
-[![API](https://img.shields.io/badge/API-헬스체크-1A1A2E)](https://cryptovol-api.onrender.com/api/health)
-[![Paper](https://img.shields.io/badge/Paper-논문_%2B_재현_부록-34C759)](docs/paper/)
-
-
-> 백엔드가 Render 무료 플랜이라 서버가 깨어나는 데 약 50초가 걸립니다. 
+<p align="center">
+  <a href="https://crypto-volatility-intelligence-syst.vercel.app/"><img src="docs/buttons/demo.svg" alt="라이브 데모 열기" width="232"></a>
+  &nbsp;
+  <a href="docs/paper/"><img src="docs/buttons/paper.svg" alt="논문 + 재현 부록" width="232"></a>
+</p>
+<p align="center"><sub>백엔드가 Render 무료 플랜이라 첫 접속 시 서버가 깨어나는 데 약 50초가 걸립니다 · <a href="https://cryptovol-api.onrender.com/api/health">API 헬스체크</a></sub></p>
 
 > **GARCH 변동성 모형을 실시간 웹 서비스로 전환한 멀티코인 변동성 예측 대시보드**
 >
 > *A real-time multi-coin volatility forecasting dashboard powered by GARCH models, Monte Carlo simulation, and AI market briefing.*
 
-![메인 대시보드](image/cryptovol/cryptovol-main.png)
+[![메인 대시보드 — 클릭하면 라이브 데모가 열립니다](image/cryptovol/cryptovol-main.png)](https://crypto-volatility-intelligence-syst.vercel.app/)
 
 **출발점** — 이 프로젝트는 2023년 학술제 팀 프로젝트(3인) *「암호화폐 변동성 비교 및 분석: GARCH 모델 기반 예측」*
 에서 시작했습니다. 팀에서는 짧은 기간 안에 **GARCH · TGARCH · GARCH+E.V · TGARCH+E.V**를 적합하고
