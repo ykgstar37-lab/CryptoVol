@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.price import CoinDaily
-from app.services.garch import fit_garch, fit_tgarch, fit_har_garch, _cache_get, _cache_set
+from app.services.garch import fit_garch, fit_tgarch, fit_har_garch
+from app.services.precompute import get_or_compute
 
 router = APIRouter(prefix="/api/signal", tags=["signal"])
 
@@ -100,11 +101,11 @@ def get_signal(coin: str = Query(default="BTC", pattern="^(BTC|ETH|SOL)$"), db: 
 @router.get("/leaderboard")
 def model_leaderboard(coin: str = Query(default="BTC", pattern="^(BTC|ETH|SOL)$"), db: Session = Depends(get_db)):
     """Rank models by prediction accuracy over last 30 days."""
-    cache_key = f"leaderboard:{coin}"
-    cached = _cache_get(cache_key)
-    if cached:
-        return cached
+    return get_or_compute(f"leaderboard:{coin}", db, coin,
+                          lambda: compute_leaderboard(db, coin))
 
+
+def compute_leaderboard(db: Session, coin: str):
     rows = (
         db.query(CoinDaily)
         .filter(CoinDaily.symbol == coin)
@@ -150,7 +151,6 @@ def model_leaderboard(coin: str = Query(default="BTC", pattern="^(BTC|ETH|SOL)$"
     for i, r in enumerate(results):
         r["rank"] = i + 1
 
-    _cache_set(cache_key, results)
     return results
 
 

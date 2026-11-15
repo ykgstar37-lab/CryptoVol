@@ -16,6 +16,7 @@ from app.schemas.volatility import (
     VolatilityPredict,
 )
 from app.services.garch import predict_all, fit_garch, fit_tgarch, fit_har_garch, fit_har_tgarch, _cache_get, _cache_set
+from app.services.precompute import get_or_compute
 from app.services.risk_score import compute_risk_score
 from scipy.stats import pearsonr
 
@@ -79,11 +80,11 @@ def volatility_compare(
     db: Session = Depends(get_db),
 ):
     """Return daily rolling volatility predictions for all 5 models."""
-    cache_key = f"compare:{coin}:{days}"
-    cached = _cache_get(cache_key)
-    if cached:
-        return cached
+    return get_or_compute(f"compare:{coin}:{days}", db, coin,
+                          lambda: compute_compare(db, coin, days))
 
+
+def compute_compare(db: Session, coin: str, days: int):
     total_needed = days + WINDOW + 30
     rows = (
         db.query(CoinDaily)
@@ -135,7 +136,6 @@ def volatility_compare(
 
         results.append(row_data)
 
-    _cache_set(cache_key, results)
     return results
 
 
@@ -146,11 +146,11 @@ def volatility_accuracy(
     db: Session = Depends(get_db),
 ):
     """Track cumulative prediction accuracy: predicted vs realized volatility per model."""
-    cache_key = f"accuracy:{coin}:{days}"
-    cached = _cache_get(cache_key)
-    if cached:
-        return cached
+    return get_or_compute(f"accuracy:{coin}:{days}", db, coin,
+                          lambda: compute_accuracy(db, coin, days))
 
+
+def compute_accuracy(db: Session, coin: str, days: int):
     total_needed = days + WINDOW + 30
     rows = (
         db.query(CoinDaily)
@@ -218,9 +218,7 @@ def volatility_accuracy(
     for i, m in enumerate(models_summary):
         m["rank"] = i + 1
 
-    result = {"models": models_summary, "daily": daily}
-    _cache_set(cache_key, result)
-    return result
+    return {"models": models_summary, "daily": daily}
 
 
 @router.get("/factors", response_model=FactorCorrelationResult)

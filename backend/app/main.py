@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.routers import price, volatility, backtest, signal, briefing, portfolio
 from app.routers.ws import router as ws_router, binance_listener
-from app.scheduler import backfill_data, daily_fetch, init_db
+from app.scheduler import daily_sync, init_db, startup_sync
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,13 +23,13 @@ async def lifespan(app: FastAPI):
     init_db()
     logger.info("Database initialized")
 
-    # Backfill in background (non-blocking startup)
-    backfill_task = asyncio.create_task(backfill_data(days=365))
+    # Backfill → precompute in background (non-blocking startup)
+    backfill_task = asyncio.create_task(startup_sync(days=365))
     logger.info("Backfill started in background")
 
-    # Schedule daily fetch
+    # Schedule daily fetch (+ precompute refresh)
     scheduler.add_job(
-        lambda: asyncio.ensure_future(daily_fetch()),
+        lambda: asyncio.ensure_future(daily_sync()),
         "cron",
         hour=0,
         minute=5,

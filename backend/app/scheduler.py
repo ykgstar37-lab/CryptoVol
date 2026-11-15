@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.database import SessionLocal, engine
 from app.models.price import CoinDaily, Base
+from app.models.precomputed import PrecomputedResult  # noqa: F401 — register for create_all
 from app.services import coingecko
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,32 @@ async def backfill_coin(symbol: str, days: int = 365) -> bool:
         return False
     finally:
         db.close()
+
+
+async def warm_caches():
+    """무거운 계산(compare · accuracy · leaderboard)을 백그라운드 스레드에서 미리 채운다."""
+    import os
+
+    if os.environ.get("TESTING"):
+        return
+    from app.services.precompute import warm_all
+
+    try:
+        await asyncio.to_thread(warm_all)
+    except Exception as e:
+        logger.error(f"Precompute failed: {e}")
+
+
+async def startup_sync(days: int = 365):
+    """기동 시 데이터 공백을 채운 뒤 무거운 결과를 미리 계산한다."""
+    await backfill_data(days=days)
+    await warm_caches()
+
+
+async def daily_sync():
+    """일일 수집 후 바뀐 데이터 버전으로 미리 계산을 갱신한다."""
+    await daily_fetch()
+    await warm_caches()
 
 
 async def backfill_data(days: int = 365):

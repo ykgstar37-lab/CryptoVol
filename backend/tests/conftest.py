@@ -15,6 +15,9 @@ from app.main import app
 @pytest.fixture(autouse=True)
 def _clean_db():
     """Create fresh tables for each test."""
+    from app.services import precompute
+
+    precompute.clear()
     eng = create_engine(TEST_DB, connect_args={"check_same_thread": False})
     Base.metadata.drop_all(bind=eng)
     Base.metadata.create_all(bind=eng)

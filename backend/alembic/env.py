@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.config import settings
 from app.database import Base
 from app.models.price import CoinDaily  # noqa: F401 — register models
+from app.models.precomputed import PrecomputedResult  # noqa: F401
 
 config = context.config
 
