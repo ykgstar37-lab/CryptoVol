@@ -16,7 +16,7 @@
 
 [![메인 대시보드 — 클릭하면 라이브 데모가 열립니다](image/cryptovol/cryptovol-main.png)](https://crypto-volatility-intelligence-syst.vercel.app/)
 
-**출발점** — 이 프로젝트는 2023년 학술제 팀 프로젝트(3인) *「암호화폐 변동성 비교 및 분석: GARCH 모델 기반 예측」*
+**출발점** — 이 프로젝트는 2023년 P학기(통계 실무 프로젝트) 팀 프로젝트(3인) *「암호화폐 변동성 비교 및 분석: GARCH 모델 기반 예측」*
 에서 시작했습니다. 팀에서는 짧은 기간 안에 **GARCH · TGARCH · GARCH+E.V · TGARCH+E.V**를 적합하고
 HAR 계열까지 모형을 설계했으며, 논문은 다음 두 가지를 향후 과제로 남겼습니다.
 
