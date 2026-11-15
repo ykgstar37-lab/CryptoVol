@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-sqlalchemy
+sqlalchemy>=2.0,<2.1  # 2.1부터 postgresql:// 기본 드라이버가 psycopg2 → psycopg(v3)로 바뀐다
 pydantic-settings
 httpx
 apscheduler
