@@ -3,6 +3,7 @@ import math
 import logging
 from datetime import date, timedelta
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal, engine
@@ -21,10 +22,19 @@ async def backfill_coin(symbol: str, days: int = 365) -> bool:
     """Fetch historical data for a single coin. Returns True if the DB has data after."""
     db = SessionLocal()
     try:
-        existing = db.query(CoinDaily).filter(CoinDaily.symbol == symbol).count()
-        if existing > 100:
-            logger.info(f"{symbol}: DB already has {existing} rows, skipping backfill")
-            return True
+        # 행 개수가 아니라 "마지막 날짜"로 판단한다. 무료 플랜은 접속이 없으면 잠들어
+        # 00:05 크론이 돌지 않으므로, 개수만 보면 공백이 생겨도 영원히 건너뛴다.
+        latest = (
+            db.query(func.max(CoinDaily.date)).filter(CoinDaily.symbol == symbol).scalar()
+        )
+        if latest is not None:
+            gap = (date.today() - latest).days
+            if gap <= 1:
+                logger.info(f"{symbol}: DB is up to date ({latest}), skipping backfill")
+                return True
+            # 하루 겹쳐 받아 첫 신규 행의 log_return 계산에 쓸 직전 종가를 확보한다
+            days = min(days, gap + 2)
+            logger.info(f"{symbol}: DB ends at {latest}, filling {gap} missing days")
 
         logger.info(f"{symbol}: Backfilling {days} days of data...")
         chart = await coingecko.get_market_chart(days=days, symbol=symbol)
