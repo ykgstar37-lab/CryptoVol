@@ -81,7 +81,7 @@ def volatility_compare(
 ):
     """Return daily rolling volatility predictions for all 5 models."""
     return get_or_compute(f"compare:{coin}:{days}", db, coin,
-                          lambda: compute_compare(db, coin, days))
+                          lambda s: compute_compare(s, coin, days))
 
 
 def compute_compare(db: Session, coin: str, days: int):
@@ -147,7 +147,7 @@ def volatility_accuracy(
 ):
     """Track cumulative prediction accuracy: predicted vs realized volatility per model."""
     return get_or_compute(f"accuracy:{coin}:{days}", db, coin,
-                          lambda: compute_accuracy(db, coin, days))
+                          lambda s: compute_accuracy(s, coin, days))
 
 
 def compute_accuracy(db: Session, coin: str, days: int):

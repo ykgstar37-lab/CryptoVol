@@ -96,7 +96,10 @@ async def warm_caches():
     from app.services.precompute import warm_all
 
     try:
-        await asyncio.to_thread(warm_all)
+        # 백그라운드 갱신과 같은 워커 1개에서 순서대로 돌려 CPU를 나눠 쓰지 않게 한다
+        from app.services.precompute import _executor
+
+        await asyncio.wrap_future(_executor.submit(warm_all))
     except Exception as e:
         logger.error(f"Precompute failed: {e}")
 

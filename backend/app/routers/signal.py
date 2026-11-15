@@ -102,7 +102,7 @@ def get_signal(coin: str = Query(default="BTC", pattern="^(BTC|ETH|SOL)$"), db: 
 def model_leaderboard(coin: str = Query(default="BTC", pattern="^(BTC|ETH|SOL)$"), db: Session = Depends(get_db)):
     """Rank models by prediction accuracy over last 30 days."""
     return get_or_compute(f"leaderboard:{coin}", db, coin,
-                          lambda: compute_leaderboard(db, coin))
+                          lambda s: compute_leaderboard(s, coin))
 
 
 def compute_leaderboard(db: Session, coin: str):
